@@ -15,7 +15,7 @@ import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import PhoneInput from "react-phone-input-2";
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 function Portfolio() {
   const navigate = useNavigate();
@@ -312,7 +312,7 @@ function Portfolio() {
                         />
                       </div>
                       <div className="flex flex-col">
-                        <p className="text-sm text-slate-500 mt-1">Max: 5mb</p>
+                        <p className="text-sm text-slate-500 mt-1">Max: 10 MB</p>
                         <p className="text-sm text-slate-500 mt-1">
                           Size: 400*400
                         </p>
@@ -348,7 +348,7 @@ function Portfolio() {
                         </div>
                       </div>
                       <div className="flex flex-col">
-                        <p className="text-sm text-slate-500 mt-1">Max: 5mb</p>
+                        <p className="text-sm text-slate-500 mt-1">Max: 10 MB</p>
                         <p className="text-sm text-slate-500 mt-1">
                           Size: 1920*1024
                         </p>

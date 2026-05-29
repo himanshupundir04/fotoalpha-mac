@@ -16,7 +16,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import PhoneInput from "react-phone-input-2";
 import * as Yup from "yup";
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 function Portfolio() {
   const navigate = useNavigate();
@@ -168,7 +168,7 @@ function Portfolio() {
     // Set aspect ratio based on cropType before opening cropper
     const aspectRatios = {
       profileImage: 1 / 1,
-      coverImage: 3.5 / 1,
+      coverImage: 16 / 9,
       coverMobile: 4 / 5,
     };
     setCropType(type);
@@ -187,10 +187,10 @@ function Portfolio() {
       return;
     }
 
-    // Check file size (max 1MB = 1,048,576 bytes)
-    const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB in bytes
+    // Check file size (max 5MB)
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
     if (file.size > MAX_FILE_SIZE) {
-      toast.error("File size must be less than 1 MB", {
+      toast.error("File size must be less than 5 MB", {
         autoClose: 3000,
       });
       // Reset the input value so user can select the same file again after correction
@@ -207,13 +207,14 @@ function Portfolio() {
   };
 
   // After cropping is complete
- const handleCropComplete = (croppedFile) => {
-    formik.setFieldValue(cropType, croppedFile);
+  const handleCropComplete = (croppedFile, resultType) => {
+    const type = resultType || cropType;
+    formik.setFieldValue(type, croppedFile);
     const previewUrl = URL.createObjectURL(croppedFile);
 
-    if (cropType === "profileImage") setProfilePreview(previewUrl);
-    else if (cropType === "coverImage") setCoverPreview(previewUrl);
-    else if (cropType === "coverMobile") setCoverMobilePreview(previewUrl);
+    if (type === "profileImage") setProfilePreview(previewUrl);
+    else if (type === "coverImage") setCoverPreview(previewUrl);
+    else if (type === "coverMobile") setCoverMobilePreview(previewUrl);
   };
 
   useEffect(() => {
@@ -345,7 +346,7 @@ function Portfolio() {
                 </button>
               </div>
               <form onSubmit={formik.handleSubmit}>
-                <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="mt-4 grid grid-cols-1 gap-4">
                   <div className="rounded-2xl border border-slate-200 bg-slate-50/60 p-4 dark:bg-slate-900/30">
                     <div>
                       <div className="flex items-center justify-between">
@@ -396,12 +397,11 @@ function Portfolio() {
                         onChange={(e) => handleImageChange(e, "profileImage")}
                       />
                     </div>
-                    <div className="mt-4 ">
+                    <div className="mt-4">
                       <div className="flex items-center justify-between mb-3">
                         <h2 className="text-slate-700 font-normal dark:text-white">
                           Cover Image
                         </h2>
-
                         <label
                           htmlFor="cover"
                           className="flex items-center gap-1.5 rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-700 cursor-pointer hover:bg-slate-100 transition"
@@ -417,56 +417,11 @@ function Portfolio() {
                           onChange={(e) => handleImageChange(e, "coverImage")}
                         />
                       </div>
-                      <div>
-                        <div className="group overflow-hidden rounded-xl border border-slate-300 bg-white shadow-sm hover:shadow-md transition">
-                          <div className="relative aspect-[3.5/1] w-full bg-slate-100">
-                            {!coverImageLoaded && (
-                              <Skeleton
-                                variant="rectangular"
-                                width="100%"
-                                height="100%"
-                                className="!absolute inset-0 z-10"
-                              />
-                            )}
 
-                            <img
-                              src={coverImageSrc}
-                              alt="cover"
-                              className={`h-full w-full object-cover transition-all duration-300 group-hover:scale-105 ${
-                                coverImageLoaded ? "opacity-100" : "opacity-0"
-                              }`}
-                              loading="lazy"
-                              onLoad={() => setCoverImageLoaded(true)}
-                              onError={() => setCoverImageLoaded(true)}
-                            />
-                          </div>
-                        </div>
-
-                        <p className="mt-2 text-xs text-slate-500">
-                          Max: 1 MB • Recommended: 2100 × 600
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                   <div className="rounded-2xl border border-slate-200 bg-slate-50/60 p-5 dark:bg-slate-900/30">
-                    <div>
-                      <div className="flex justify-between items-center">
-                        <h2 className="text-slate-700 font-normal dark:text-white">
-                          Mobile Cover Image
-                        </h2>
-                        <label
-                          htmlFor="coverMobile"
-                          className="flex items-center gap-1.5 rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs text-slate-700 cursor-pointer hover:bg-slate-100 transition"
-                        >
-                          <PhotoCameraIcon sx={{ fontSize: "16px" }} />
-                          Change
-                        </label>
-                      </div>
-
-                      <div className="group flex items-center gap-4 mt-3  w-full shadow-sm hover:shadow-md transition">
-                        {/* Image */}
-                        <div className="relative aspect-[4/5] w-60 flex-shrink-0 overflow-hidden rounded-lg bg-slate-100">
+                      {/* Desktop preview */}
+                      <p className="text-xs text-slate-400 mb-1.5">Desktop</p>
+                      <div className="group overflow-hidden rounded-xl border border-slate-300 bg-white shadow-sm hover:shadow-md transition mb-3">
+                        <div className="relative aspect-[4/1] w-full bg-slate-100">
                           {!coverImageLoaded && (
                             <Skeleton
                               variant="rectangular"
@@ -475,42 +430,51 @@ function Portfolio() {
                               className="!absolute inset-0 z-10"
                             />
                           )}
-
                           <img
-                            src={coverMobileImageSrc}
+                            src={coverImageSrc}
                             alt="cover"
                             className={`h-full w-full object-cover transition-all duration-300 group-hover:scale-105 ${
-                              coverMobileImageLoaded
-                                ? "opacity-100"
-                                : "opacity-0"
+                              coverImageLoaded ? "opacity-100" : "opacity-0"
+                            }`}
+                            loading="lazy"
+                            onLoad={() => setCoverImageLoaded(true)}
+                            onError={() => setCoverImageLoaded(true)}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Mobile preview */}
+                      <p className="text-xs text-slate-400 mb-1.5">Mobile</p>
+                      <div className="flex items-center gap-4">
+                        <div className="relative aspect-[4/5] w-28 flex-shrink-0 overflow-hidden rounded-lg border border-slate-300 bg-slate-100 shadow-sm">
+                          {!coverMobileImageLoaded && (
+                            <Skeleton
+                              variant="rectangular"
+                              width="100%"
+                              height="100%"
+                              className="!absolute inset-0 z-10"
+                            />
+                          )}
+                          <img
+                            src={coverMobileImageSrc}
+                            alt="cover mobile"
+                            className={`h-full w-full object-cover transition-all duration-300 ${
+                              coverMobileImageLoaded ? "opacity-100" : "opacity-0"
                             }`}
                             loading="lazy"
                             onLoad={() => setCoverMobileImageLoaded(true)}
                             onError={() => setCoverMobileImageLoaded(true)}
                           />
-
-                          {/* Info */}
                         </div>
-                        <div className="">
-                          <p className="mt-1 text-xs text-slate-500">
-                            Max size: 1 MB
-                          </p>
-                          <p className="text-xs text-slate-500">
-                            Recommended: 1080 × 1350
-                          </p>
-                        </div>
+                        <p className="text-xs text-slate-400 leading-relaxed">
+                          Select <span className="font-medium text-slate-600">Mobile</span> preset in the crop dialog to update mobile cover.
+                        </p>
                       </div>
-                    </div>
-                    {/* </div> */}
 
-                    {/* Hidden Input */}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      id="coverMobile"
-                      hidden
-                      onChange={(e) => handleImageChange(e, "coverMobile")}
-                    />
+                      <p className="mt-2 text-xs text-slate-400">
+                        Max: 1 MB • Desktop: 2400 × 600 • Mobile: 800 × 1000
+                      </p>
+                    </div>
                   </div>
                 </div>
 

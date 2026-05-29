@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import Slider from "react-slick";
 import demo from "../../image/demo.jpg";
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 const steps = ["Select Event", "Select SubCategory", "Uplaod Photos"];
 
@@ -62,10 +62,10 @@ function Events() {
       setLoading(false);
       setEvent(response.data.events);
       // console.log(response.data.events);
-      window.electronAPI.setStore("uplaodEvents", response.data.events);
+      window.electronAPI?.setStore("uplaodEvents", response.data.events);
     } catch (error) {
       setLoading(false);
-      const cachedSummary = await window.electronAPI.getStore("uplaodEvents");
+      const cachedSummary = await window.electronAPI?.getStore("uplaodEvents");
       if (cachedSummary) {
         setEvent(cachedSummary);
         // console.log(cachedSummary);

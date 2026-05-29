@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import EventIcon from "@mui/icons-material/Event";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { Divider, Tooltip } from "@mui/material";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import GroupsIcon from "@mui/icons-material/Groups";
 import logo from "../../../image/Newlogo.png";
 import logoclose from "../../../image/bg-removed.png";
-import BoltIcon from "@mui/icons-material/Bolt";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
@@ -21,397 +19,207 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
-import FeedbackIcon from '@mui/icons-material/Feedback';
+import FeedbackIcon from "@mui/icons-material/Feedback";
 import PrintIcon from "@mui/icons-material/Print";
+import SyncIcon from "@mui/icons-material/Sync";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+
+const LINK_BASE = "flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-150 no-underline";
+const LINK_ACTIVE = "bg-blue text-white";
+const LINK_IDLE = "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800";
+const SUB_LINK_ACTIVE = "text-blue font-semibold";
+const SUB_LINK_IDLE = "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white";
+
+function SectionLabel({ label }) {
+  return (
+    <p className="px-3 pt-4 pb-1 text-[10px] font-semibold tracking-widest uppercase text-slate-400 dark:text-slate-500 select-none text-left">
+      {label}
+    </p>
+  );
+}
 
 function Aside({ setIsOpen, isOpen }) {
   const location = useLocation();
   const [showUpgrade, setUpgrade] = useState(false);
-  const navigate = useNavigate();
   const [isEventOpen, setIsEventOpen] = useState(false);
 
-  // console.log(location);
-  const isActive = (path) =>
-    location.pathname.startsWith(`/photographer/${path}`);
+  const expanded = !isOpen;
+
+  const isActive = (path) => location.pathname.startsWith(`/photographer/${path}`);
+  const isEventSection =
+    (location.pathname.includes("/photographer/event") &&
+      !location.pathname.includes("/photographer/events_list")) ||
+    location.pathname.includes("/photographer/create_event");
 
   const users = JSON.parse(localStorage.getItem("users")) || [];
   const currentUser = users.find((u) => u.isCurrent);
-
   const trial = currentUser?.isTrial;
   const endDate = currentUser?.currentSubscriptionId?.end_date;
 
   useEffect(() => {
-    if (!endDate) {
-      setUpgrade(true);
-      return;
-    }
-    const now = new Date();
+    if (!endDate) { setUpgrade(true); return; }
     const trialEnd = new Date(endDate);
-    if (trial === false && trialEnd > now) {
-      setUpgrade(false);
-    } else {
-      setUpgrade(true);
-    }
+    setUpgrade(!(trial === false && trialEnd > new Date()));
   }, [trial, endDate]);
 
+  const closeOnMobile = () => { if (window.innerWidth < 1024) setIsOpen(false); };
+
   return (
-    <>
-      <div className="h-screen flex flex-col relative text-start">
-        <nav
-          className={`lg:flex flex-col space-y-4 relative z-10 bg-white dark:bg-slate-900 ${!isOpen ? "md:max-h-full max-h-[520px]" : "max-h-full"
-            }`}
-        >
-          <div className=" title flex justify-center py-2 gap-4 items-center border-solid border-b-2 border-slate-100 dark:border-slate-800 dark:text-white">
-            {!isOpen ? (
-              <img src={logo} alt="logo" className="w-[80px] lg:w-[125px]" />
-            ) : (
-              <img src={logoclose} alt="logo" className="w-[40px]" />
-            )}
-          </div>
-          <div className="px-3 md:pt-2 h-[100%] overflow-y-auto flex-1">
-            <Link
-              to="upload_photos"
-              className={`flex items-center space-x-2 p-2 mb-1 rounded font-normal
-               no-underline ${isActive("upload_photos")
-                  ? "bg-blue text-white"
-                  : "text-slate-700 dark:!text-white hover:bg-slate-300 dark:hover:bg-gray-700"
-                }`}
-              onClick={() => {
-                if (window.innerWidth < 1024) {
-                  // ✅ only close on mobile (Tailwind md breakpoint)
-                  setIsOpen(false);
-                }
-              }}
-            >
-              <AddToPhotosIcon size={20} />
-              {(!isOpen || window.innerWidth < 1024) && (
-                <span className="text-base">Upload Photos</span>
-              )}
-            </Link>
-            <Link
-              to="dashboard"
-              className={`flex items-center space-x-2 p-2 rounded font-normal no-underline ${isActive("dashboard")
-                  ? "bg-blue text-white"
-                  : "text-slate-700 dark:!text-white hover:bg-slate-300 dark:hover:bg-gray-700"
-                }`}
-              onClick={() => {
-                if (window.innerWidth < 1024) {
-                  // ✅ only close on mobile (Tailwind md breakpoint)
-                  setIsOpen(false);
-                }
-              }}
-            >
-              <HomeIcon sx={{ fontSize: 22 }} />
-              {(!isOpen || window.innerWidth < 1024) && <span className="text-base">Dashboard</span>}
-            </Link>
-            <Link
-              to="public_portfolio"
-              className={`flex items-center space-x-2 p-2 rounded font-normal no-underline  
-                ${isActive("public_portfolio")
-                  ? "bg-blue text-white"
-                  : "text-slate-700 dark:!text-white hover:bg-slate-300 dark:hover:bg-gray-700"
-                }`}
-              onClick={() => {
-                if (window.innerWidth < 1024) {
-                  // ✅ only close on mobile (Tailwind md breakpoint)
-                  setIsOpen(false);;
-                }
-              }}
-            >
-              <AccountCircleIcon sx={{ fontSize: 22 }} />
-              {(!isOpen || window.innerWidth < 1024) && <span className="text-base">Portfolio</span>}
-            </Link>
+    <div className="h-screen flex flex-col bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 relative">
+      {/* Logo */}
+      <div className="flex items-center justify-center py-3 px-3 border-b border-slate-100 dark:border-slate-800 flex-shrink-0">
+        {expanded ? (
+          <img src={logo} alt="FotoAlpha" className="w-[120px]" />
+        ) : (
+          <img src={logoclose} alt="FotoAlpha" className="w-9 h-9 object-contain" />
+        )}
+      </div>
 
-            <div>
-              <button
-                className={`w-full flex items-center justify-between p-2 rounded font-normal no-underline ${location.pathname.includes("/photographer/event") ||
-                    location.pathname.includes("/photographer/events_list") ||
-                    location.pathname.includes("/photographer/create_event")
-                    ? "bg-blue text-white"
-                    : "text-slate-700 dark:!text-white hover:bg-slate-300 dark:hover:bg-gray-700"
-                  }`}
-                onClick={() => setIsEventOpen(!isEventOpen)}
-              >
-                <div className="flex items-center space-x-2">
-                  <EventIcon sx={{ fontSize: 22 }} />
-                  {(!isOpen || window.innerWidth < 1024) && <span className="text-base">Events</span>}
-                </div>
-                {(!isOpen || window.innerWidth < 1024) && (
-                  <span>
-                    {isEventOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                  </span>
-                )}
-              </button>
-              {isEventOpen && (
-                <div className={` ${!isOpen ? "ml-2" : "ml-0"}`}>
-                  <Link
-                    to="events_category"
-                    className={`flex items-center space-x-1 text-start p-2 rounded  font-normal no-underline ${isActive("events_category")
-                        ? "text-blue"
-                        : "text-slate-700 dark:text-white hover:bg-slate-300 dark:hover:bg-gray-700"
-                      }`}
-                    onClick={() => {
-                      if (window.innerWidth < 1024) {
-                        // ✅ only close on mobile (Tailwind md breakpoint)
-                        setIsOpen(false);
-                      }
-                      setIsEventOpen(!isEventOpen)
-                    }}
-                  >
-                    <EventAvailableIcon sx={{ fontSize: 20 }} />
-                    {(!isOpen || window.innerWidth < 1024) && (
-                      <span className="text-base">Events</span>
-                    )}
-                  </Link>
-                  <Link
-                    to="create_event"
-                    className={`flex items-center space-x-1 text-start p-2 rounded  font-normal no-underline ${isActive("create_event")
-                        ? "text-blue"
-                        : "text-slate-700 dark:text-white hover:bg-slate-300 dark:hover:bg-gray-700"
-                      }`}
-                    onClick={() => {
-                      if (window.innerWidth < 1024) {
-                        // ✅ only close on mobile (Tailwind md breakpoint)
-                        setIsOpen(false);
-                      }
-                      setIsEventOpen(!isEventOpen)
-                    }}
-                  >
-                    <EditCalendarIcon sx={{ fontSize: 20 }} />
-                    {(!isOpen || window.innerWidth < 1024) && (
-                      <span className="text-base"> Add Event</span>
-                    )}
-                  </Link>
-                  <Link
-                    to="events_list"
-                    className={`flex items-center space-x-1 text-start p-2 rounded  font-normal no-underline ${isActive("events_list")
-                        ? "text-blue"
-                        : "text-slate-700 dark:text-white hover:bg-slate-300 dark:hover:bg-gray-700"
-                      }`}
-                    onClick={() => {
-                      if (window.innerWidth < 1024) {
-                        // ✅ only close on mobile (Tailwind md breakpoint)
-                        setIsOpen(false);
-                      }
-                      setIsEventOpen(!isEventOpen)
-                    }}
-                  >
-                    <EventNoteIcon sx={{ fontSize: 20 }} />
-                    {(!isOpen || window.innerWidth < 1024) && (
-                      <span className="text-base">Events List</span>
-                    )}
-                  </Link>
-                  <Link
-                    to="print_orders"
-                    className={`flex items-center space-x-1 text-start p-2 rounded  font-normal no-underline ${isActive("print_orders")
-                        ? "text-blue"
-                        : "text-slate-700 dark:text-white hover:bg-slate-300 dark:hover:bg-gray-700"
-                      }`}
-                    onClick={() => {
-                      if (window.innerWidth < 1024) {
-                        // ✅ only close on mobile (Tailwind md breakpoint)
-                        setIsOpen(false);
-                      }
-                      setIsEventOpen(!isEventOpen)
-                    }}
-                  >
-                    <PrintIcon sx={{ fontSize: 20 }} />
-                    {(!isOpen || window.innerWidth < 1024) && (
-                      <span className="text-base">Print orders</span>
-                    )}
-                  </Link>
-                </div>
-              )}
-            </div>
-            {/* <Link
-              to="album"
-              className={`flex items-center space-x-2 p-2 rounded font-normal  no-underline ${
-                isActive("album")
-                  ? "bg-blue text-white"
-                  : "text-slate-700 dark:!text-white hover:bg-slate-300 dark:hover:bg-gray-700"
-              }`}
-              onClick={() => {
-                if (window.innerWidth < 1024) {
-                  // ✅ only close on mobile (Tailwind md breakpoint)
-                  setIsOpen(false);
-                }
-              }}
-            >
-              <PhotoLibraryIcon sx={{ fontSize: 22 }} />
-              {(!isOpen || window.innerWidth < 1024) && <span>Album</span>}
-            </Link> */}
+      {/* Scrollable nav */}
+      <nav className="flex-1 overflow-y-auto sidebar-scroll py-2">
 
-            {(!isOpen || window.innerWidth < 1024) && (
-              <p className="font-medium text-slate-700 my-2 dark:text-white text-base">
-                Tools & Support
-              </p>
-            )}
-            <Divider sx={{ color: "#1e293b" }} />
-            <Link
-              to="team"
-              className={`flex items-center space-x-2 p-2 rounded font-normal  no-underline ${isActive("team")
-                  ? "bg-blue text-white"
-                  : "text-slate-700 dark:!text-white hover:bg-slate-300 dark:hover:bg-gray-700"
-                }`}
-              onClick={() => {
-                if (window.innerWidth < 1024) {
-                  // ✅ only close on mobile (Tailwind md breakpoint)
-                  setIsOpen(false);
-                }
-              }}
-            >
-              <GroupsIcon sx={{ fontSize: 22 }} />
-              {(!isOpen || window.innerWidth < 1024) && <span className="text-base">Team</span>}
-            </Link>
-            <Link
-              to="calendar"
-              className={`flex items-center space-x-2 p-2 rounded font-normal  no-underline ${isActive("calendar")
-                  ? "bg-blue text-white"
-                  : "text-slate-700 dark:!text-white hover:bg-slate-300 dark:hover:bg-gray-700"
-                }`}
-              onClick={() => {
-                if (window.innerWidth < 1024) {
-                  // ✅ only close on mobile (Tailwind md breakpoint)
-                  setIsOpen(false);
-                }
-              }}
-            >
-              <CalendarMonthIcon sx={{ fontSize: 22 }} />
-              {(!isOpen || window.innerWidth < 1024) && (
-                <span className="text-base">Calendar</span>
-              )}
-            </Link>
-            <Link
-              to="feedback"
-              className={`flex items-center space-x-2 p-2 rounded font-normal  no-underline ${isActive("feedback")
-                  ? "bg-blue text-white"
-                  : "text-slate-700 dark:!text-white hover:bg-slate-300 dark:hover:bg-gray-700"
-                }`}
-              onClick={() => {
-                if (window.innerWidth < 1024) {
-                  // ✅ only close on mobile (Tailwind md breakpoint)
-                  setIsOpen(false);
-                }
-              }}
-            >
-              <FeedbackIcon sx={{ fontSize: 22 }} />
-              {(!isOpen || window.innerWidth < 1024) && (
-                <span className="text-base">Feedback</span>
-              )}
-            </Link>
-            <Link
-              to="billing"
-              className={`flex items-center space-x-2 p-2 rounded font-normal  no-underline ${isActive("billing")
-                  ? "bg-blue text-white"
-                  : "text-slate-700 dark:!text-white hover:bg-slate-300 dark:hover:bg-gray-700"
-                }`}
-              onClick={() => {
-                if (window.innerWidth < 1024) {
-                  // ✅ only close on mobile (Tailwind md breakpoint)
-                  setIsOpen(false);
-                }
-              }}
-            >
-              <AccountBalanceWalletIcon sx={{ fontSize: 22 }} />
-              {(!isOpen || window.innerWidth < 1024) && (
-                <span className="text-base">Accounts</span>
-              )}
-            </Link>
-            <Link
-              to="coins"
-              className={`flex items-center space-x-2 p-2 rounded font-normal  no-underline ${isActive("coins")
-                  ? "bg-blue text-white"
-                  : "text-slate-700 dark:!text-white hover:bg-slate-300 dark:hover:bg-gray-700"
-                }`}
-              onClick={() => {
-                if (window.innerWidth < 1024) {
-                  // ✅ only close on mobile (Tailwind md breakpoint)
-                  setIsOpen(false);
-                }
-              }}
-            >
-              <LocalFireDepartmentIcon sx={{ fontSize: 22 }} />
-              {(!isOpen || window.innerWidth < 1024) && (
-                <span className="text-base">Coins</span>
-              )}
-            </Link>
-            <Link
-              to="referrals"
-              className={`flex items-center space-x-2 p-2 rounded font-normal  no-underline ${isActive("referrals")
-                  ? "bg-blue text-white"
-                  : "text-slate-700 dark:!text-white hover:bg-slate-300 dark:hover:bg-gray-700"
-                }`}
-              onClick={() => {
-                if (window.innerWidth < 1024) {
-                  // ✅ only close on mobile (Tailwind md breakpoint)
-                  setIsOpen(false);
-                }
-              }}
-            >
-              <GroupAddIcon sx={{ fontSize: 22 }} />
-              {(!isOpen || window.innerWidth < 1024) && (
-                <span className="text-base">Referrals</span>
-              )}
-            </Link>
-            <Link
-              to="settings"
-              className={`flex items-center space-x-2 p-2 rounded font-normal  no-underline ${isActive("settings")
-                  ? "bg-blue text-white"
-                  : "text-slate-700 dark:!text-white hover:bg-slate-300 dark:hover:bg-gray-700"
-                }`}
-              onClick={() => {
-                if (window.innerWidth < 1024) {
-                  // ✅ only close on mobile (Tailwind md breakpoint)
-                  setIsOpen(false);
-                }
-              }}
-            >
-              <SettingsIcon sx={{ fontSize: 20 }} />
-              {(!isOpen || window.innerWidth < 1024) && <span className="text-base">Settings</span>}
-            </Link>
-            {(!isOpen || window.innerWidth < 1024) && (
+        {/* Upload Photos — featured */}
+        <div className="px-3 mb-1">
+          <Link
+            to="upload_photos"
+            className={`${LINK_BASE} ${isActive("upload_photos") ? LINK_ACTIVE : LINK_IDLE} ${expanded ? "w-full" : "justify-center"}`}
+            onClick={closeOnMobile}
+          >
+            <AddToPhotosIcon sx={{ fontSize: 20, flexShrink: 0 }} />
+            {expanded && <span>Upload Photos</span>}
+          </Link>
+        </div>
+
+        {/* MAIN */}
+        {expanded && <SectionLabel label="Main" />}
+        <div className="px-3 space-y-0.5">
+          <Link to="dashboard" className={`${LINK_BASE} ${isActive("dashboard") ? LINK_ACTIVE : LINK_IDLE} ${!expanded && "justify-center"}`} onClick={closeOnMobile}>
+            <HomeIcon sx={{ fontSize: 20, flexShrink: 0 }} />
+            {expanded && <span>Dashboard</span>}
+          </Link>
+
+          <Link to="public_portfolio" className={`${LINK_BASE} ${isActive("public_portfolio") ? LINK_ACTIVE : LINK_IDLE} ${!expanded && "justify-center"}`} onClick={closeOnMobile}>
+            <AccountCircleIcon sx={{ fontSize: 20, flexShrink: 0 }} />
+            {expanded && <span>Portfolio</span>}
+          </Link>
+
+          {/* Events accordion */}
+          <button
+            className={`w-full ${LINK_BASE} ${isEventSection ? LINK_ACTIVE : LINK_IDLE} ${!expanded && "justify-center"}`}
+            onClick={() => setIsEventOpen(!isEventOpen)}
+          >
+            <EventIcon sx={{ fontSize: 20, flexShrink: 0 }} />
+            {expanded && (
               <>
-                <div
-                  className={`flex items-center justify-between p-2 rounded font-normal cursor-not-allowed  ${"text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/30"
-                    }`}
-                  title="This feature is coming soon"
-                >
-                  <Tooltip title="Coming soon">
-                    <div className="flex items-center text-sm space-x-2">
-                      <AddPhotoAlternateIcon sx={{ fontSize: 20 }} />
-                      {(!isOpen || window.innerWidth < 1024) && (
-                        <>
-                          <span className="text-xs">Export Photos</span>
-                          <span className="text-green-600 text-xs">Coming Soon</span>
-                        </>
-                      )}
-                    </div>
-                  </Tooltip>
-                </div>
-                <div
-                  className={`flex items-center justify-between p-2 rounded font-normal cursor-not-allowed  ${"text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/30"
-                    }`}
-                  title="This feature is coming soon"
-                >
-                  <Tooltip title="Coming soon">
-                    <div className="flex items-center text-sm space-x-2">
-                      <PhotoLibraryIcon sx={{ fontSize: 20 }} />
-                      {(!isOpen || window.innerWidth < 1024) && (
-                        <>
-                          <span className="text-xs">Ai Album</span>
-                          <span className="text-green-600 text-xs">Coming Soon</span>
-                        </>
-                      )}
-                    </div>
-                  </Tooltip>
-                </div>
+                <span className="flex-1 text-left">Events</span>
+                {isEventOpen ? <ExpandLessIcon sx={{ fontSize: 18 }} /> : <ExpandMoreIcon sx={{ fontSize: 18 }} />}
               </>
             )}
+          </button>
 
-          </div>
-        </nav>
-      </div>
-    </>
+          {isEventOpen && expanded && (
+            <div className="ml-3 pl-3 border-l-2 border-slate-200 dark:border-slate-700 space-y-0.5 my-1">
+              <Link to="events_category" className={`flex items-center gap-2 px-2 py-1.5 rounded-md text-sm transition-colors no-underline ${isActive("events_category") ? SUB_LINK_ACTIVE : SUB_LINK_IDLE}`} onClick={() => { closeOnMobile(); setIsEventOpen(false); }}>
+                <EventAvailableIcon sx={{ fontSize: 17, flexShrink: 0 }} />
+                <span>Events</span>
+              </Link>
+              <Link to="create_event" className={`flex items-center gap-2 px-2 py-1.5 rounded-md text-sm transition-colors no-underline ${isActive("create_event") ? SUB_LINK_ACTIVE : SUB_LINK_IDLE}`} onClick={() => { closeOnMobile(); setIsEventOpen(false); }}>
+                <EditCalendarIcon sx={{ fontSize: 17, flexShrink: 0 }} />
+                <span>Add Event</span>
+              </Link>
+            </div>
+          )}
+
+          <Link to="events_list" className={`${LINK_BASE} ${isActive("events_list") ? LINK_ACTIVE : LINK_IDLE} ${!expanded && "justify-center"}`} onClick={closeOnMobile}>
+            <EventNoteIcon sx={{ fontSize: 20, flexShrink: 0 }} />
+            {expanded && <span>Events List</span>}
+          </Link>
+
+          <Link to="print_orders" className={`${LINK_BASE} ${isActive("print_orders") ? LINK_ACTIVE : LINK_IDLE} ${!expanded && "justify-center"}`} onClick={closeOnMobile}>
+            <PrintIcon sx={{ fontSize: 20, flexShrink: 0 }} />
+            {expanded && <span>Print Orders</span>}
+          </Link>
+
+        </div>
+
+        {/* TOOLS & SUPPORT */}
+        {expanded && <SectionLabel label="Tools & Support" />}
+        <div className="px-3 space-y-0.5">
+          <Link to="team" className={`${LINK_BASE} ${isActive("team") ? LINK_ACTIVE : LINK_IDLE} ${!expanded && "justify-center"}`} onClick={closeOnMobile}>
+            <GroupsIcon sx={{ fontSize: 20, flexShrink: 0 }} />
+            {expanded && <span>Team</span>}
+          </Link>
+          <Link to="calendar" className={`${LINK_BASE} ${isActive("calendar") ? LINK_ACTIVE : LINK_IDLE} ${!expanded && "justify-center"}`} onClick={closeOnMobile}>
+            <CalendarMonthIcon sx={{ fontSize: 20, flexShrink: 0 }} />
+            {expanded && <span>Event Calendar</span>}
+          </Link>
+          <Link to="feedback" className={`${LINK_BASE} ${isActive("feedback") ? LINK_ACTIVE : LINK_IDLE} ${!expanded && "justify-center"}`} onClick={closeOnMobile}>
+            <FeedbackIcon sx={{ fontSize: 20, flexShrink: 0 }} />
+            {expanded && <span>Feedback</span>}
+          </Link>
+          <Link to="sync_watchers" className={`${LINK_BASE} ${isActive("sync_watchers") ? LINK_ACTIVE : LINK_IDLE} ${!expanded && "justify-center"}`} onClick={closeOnMobile}>
+            <SyncIcon sx={{ fontSize: 20, flexShrink: 0 }} />
+            {expanded && <span>Sync Watchers</span>}
+          </Link>
+        </div>
+
+        {/* ACCOUNT */}
+        {expanded && <SectionLabel label="Account" />}
+        <div className="px-3 space-y-0.5">
+          <Link to="billing" className={`${LINK_BASE} ${isActive("billing") ? LINK_ACTIVE : LINK_IDLE} ${!expanded && "justify-center"}`} onClick={closeOnMobile}>
+            <AccountBalanceWalletIcon sx={{ fontSize: 20, flexShrink: 0 }} />
+            {expanded && <span>Accounts</span>}
+          </Link>
+          <Link to="coins" className={`${LINK_BASE} ${isActive("coins") ? LINK_ACTIVE : LINK_IDLE} ${!expanded && "justify-center"}`} onClick={closeOnMobile}>
+            <LocalFireDepartmentIcon sx={{ fontSize: 20, flexShrink: 0 }} />
+            {expanded && <span>Coins</span>}
+          </Link>
+          <Link to="referrals" className={`${LINK_BASE} ${isActive("referrals") ? LINK_ACTIVE : LINK_IDLE} ${!expanded && "justify-center"}`} onClick={closeOnMobile}>
+            <GroupAddIcon sx={{ fontSize: 20, flexShrink: 0 }} />
+            {expanded && <span>Referrals</span>}
+          </Link>
+          <Link to="settings" className={`${LINK_BASE} ${isActive("settings") ? LINK_ACTIVE : LINK_IDLE} ${!expanded && "justify-center"}`} onClick={closeOnMobile}>
+            <SettingsIcon sx={{ fontSize: 20, flexShrink: 0 }} />
+            {expanded && <span>Settings</span>}
+          </Link>
+        </div>
+
+        {/* OTHER */}
+        {expanded && (
+          <>
+            <SectionLabel label="Other" />
+            <div className="px-3 space-y-0.5">
+              <div className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-slate-400 dark:text-slate-500 cursor-not-allowed select-none">
+                <AddPhotoAlternateIcon sx={{ fontSize: 20, flexShrink: 0 }} />
+                <span>Export Photo</span>
+                <span className="ml-auto text-[10px] font-semibold text-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 px-1.5 py-0.5 rounded-full">Soon</span>
+              </div>
+              <div className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-slate-400 dark:text-slate-500 cursor-not-allowed select-none">
+                <PhotoLibraryIcon sx={{ fontSize: 20, flexShrink: 0 }} />
+                <span>AI Album</span>
+                <span className="ml-auto text-[10px] font-semibold text-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 px-1.5 py-0.5 rounded-full">Soon</span>
+              </div>
+            </div>
+          </>
+        )}
+      </nav>
+
+      {/* Collapse toggle */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="hidden lg:flex items-center gap-2 px-4 py-3 border-t border-slate-100 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-sm font-medium flex-shrink-0"
+      >
+        {expanded ? (
+          <>
+            <ChevronLeftIcon sx={{ fontSize: 18 }} />
+            <span>Collapse</span>
+          </>
+        ) : (
+          <ChevronRightIcon sx={{ fontSize: 18 }} />
+        )}
+      </button>
+    </div>
   );
 }
 

@@ -25,7 +25,7 @@ const style = {
   py: 2,
   px: 4,
 };
-const baseUrl = process.env.REACT_APP_BASE_URL;
+const baseUrl = import.meta.env.VITE_BASE_URL;
 function Guestassignedteam({ initialView = "assigned" }) {
   const getViewFromInput = (value) => {
     const normalizedView = String(value || "").toLowerCase();
@@ -42,7 +42,7 @@ function Guestassignedteam({ initialView = "assigned" }) {
   const [team, setTeam] = useState([]);
   const [teamassign, setTeamassign] = useState([]);
   const [guest, setGuest] = useState([]);
-  const { slotid } = useParams();
+  const { eventid } = useParams();
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const [openCreateModal, setOpenCreateModal] = useState(false);
@@ -71,7 +71,7 @@ function Guestassignedteam({ initialView = "assigned" }) {
 
   const fetchTeam = () => {
     axios
-      .get(`${baseUrl}/photographer/event/team-assigned?eventId=${slotid}`, {
+      .get(`${baseUrl}/photographer/event/team-assigned?eventId=${eventid}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -103,7 +103,7 @@ function Guestassignedteam({ initialView = "assigned" }) {
   const fetchGuest = () => {
     setLoading(true);
     axios
-      .get(`${baseUrl}/photographer/event/guests?eventId=${slotid}`, {
+      .get(`${baseUrl}/photographer/event/guests?eventId=${eventid}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -315,7 +315,7 @@ function Guestassignedteam({ initialView = "assigned" }) {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`${baseUrl}/events/assign-team/${slotid}/${id}/revoke`, {
+          .delete(`${baseUrl}/events/assign-team/${eventid}/${id}/revoke`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
               "ngrok-skip-browser-warning": "69420",

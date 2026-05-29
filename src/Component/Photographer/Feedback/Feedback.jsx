@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Person4Icon from "@mui/icons-material/Person4";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
@@ -8,7 +9,7 @@ import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import StarBorderRoundedIcon from "@mui/icons-material/StarBorderRounded";
 import ReviewsOutlinedIcon from "@mui/icons-material/ReviewsOutlined";
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 const clampRating = (value) => {
   const parsed = Number(value);
@@ -127,6 +128,7 @@ const Stars = ({ count }) => (
 );
 
 function Feedback() {
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
@@ -275,10 +277,39 @@ function Feedback() {
               <CircularProgress />
             </div>
           ) : feedbacks.length === 0 ? (
-            <div className="flex h-72 flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white text-center shadow-sm">
-              <p className="text-lg font-semibold text-slate-700">
-                No feedback found
-              </p>
+            <div className="flex flex-col sm:flex-row items-center rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-blue-50 shadow-sm overflow-hidden">
+              {/* Illustration */}
+              <div className="flex-shrink-0 flex items-center justify-center bg-indigo-50/80 sm:w-52 w-full py-10 sm:py-0 sm:h-56">
+                <svg viewBox="0 0 120 100" className="w-36 h-28" fill="none">
+                  {/* Back bubble */}
+                  <rect x="30" y="28" width="70" height="48" rx="12" fill="#c7d2fe" opacity="0.6" />
+                  <polygon points="85,76 95,88 75,76" fill="#c7d2fe" opacity="0.6" />
+                  {/* Front bubble */}
+                  <rect x="14" y="16" width="66" height="46" rx="11" fill="#818cf8" opacity="0.85" />
+                  <polygon points="22,62 12,76 34,62" fill="#818cf8" opacity="0.85" />
+                  {/* Stars inside front bubble */}
+                  <text x="22" y="46" fontSize="20" fill="white" opacity="0.95">★</text>
+                  <text x="44" y="46" fontSize="20" fill="white" opacity="0.95">★</text>
+                  <text x="34" y="34" fontSize="14" fill="white" opacity="0.6">★</text>
+                  {/* Dots */}
+                  <circle cx="105" cy="20" r="3" fill="#c7d2fe" opacity="0.7" />
+                  <circle cx="10" cy="14" r="2" fill="#818cf8" opacity="0.4" />
+                  <circle cx="112" cy="60" r="2" fill="#a5b4fc" opacity="0.6" />
+                </svg>
+              </div>
+              {/* Content */}
+              <div className="flex-1 px-8 py-8 text-start">
+                <h3 className="text-xl font-bold text-slate-800 mb-2">No feedback yet</h3>
+                <p className="text-sm text-slate-500 leading-relaxed mb-5 max-w-xs">
+                  Guest ratings and review submissions will appear here once your clients share their experience.
+                </p>
+                <button onClick={() => navigate("/photographer/events_category")} className="inline-flex items-center gap-2 bg-blue rounded-lg px-4 py-2.5 text-sm font-semibold text-white shadow hover:shadow-md transition-all duration-200 hover:scale-[1.02]">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  Share Event Gallery
+                </button>
+              </div>
             </div>
           ) : (
             <div className="space-y-4">

@@ -4,7 +4,7 @@ import { PhotographerTeamEventContext } from "../Context/PhotographerTeamEventCo
 import demo from "../../image/demo.jpg";
 import axios from "axios";
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const baseURL = import.meta.env.VITE_BASE_URL;
 function Subevent() {
   const { photographerteamevent } = useContext(PhotographerTeamEventContext);
   const navigate = useNavigate();
@@ -28,13 +28,13 @@ function Subevent() {
       );
       // console.log("sub",response.data?.event?.timeSlots)
       setSlots(response?.data?.event?.timeSlots);
-      window.electronAPI.setStore(
+      window.electronAPI?.setStore(
         "categoryslot",
         response?.data?.event?.timeSlots
       );
     } catch (error) {
       console.log(error);
-      const cachedSummary = window.electronAPI.getStore("categoryslot");
+      const cachedSummary = window.electronAPI?.getStore("categoryslot");
       setSlots(cachedSummary);
     }
   };

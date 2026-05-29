@@ -14,7 +14,7 @@ import BoltIcon from "@mui/icons-material/Bolt";
 import EditTeamMember from "./EditTeamMember";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 
-const baseurl = process.env.REACT_APP_BASE_URL;
+const baseurl = import.meta.env.VITE_BASE_URL;
 
 function Team() {
   const navigate = useNavigate();
@@ -42,10 +42,10 @@ function Team() {
       setTeam(response?.data?.users);
       // console.log(response.data.users);
       setLoading(false);
-      window.electronAPI.setStore("team", response.data.users);
+      window.electronAPI?.setStore("team", response.data.users);
     } catch (error) {
       setLoading(false);
-      const cachedSummary = await window.electronAPI.getStore("team");
+      const cachedSummary = await window.electronAPI?.getStore("team");
       if (cachedSummary) {
         setTeam(cachedSummary);
         // console.log(cachedSummary);

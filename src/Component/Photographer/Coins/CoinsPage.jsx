@@ -4,7 +4,7 @@ import axios from "axios";
 import CoinPurchaseModal from "../../CoinPurchase/CoinPurchaseModal";
 import { PhotographerEventContext } from "../Context/PhotographerEventContext";
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 const CoinsPage = () => {
   const [coinBalance, setCoinBalance] = useState({
@@ -175,56 +175,56 @@ const CoinsPage = () => {
       {/* Coin Balance Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* Total Coins */}
-        <div className="bg-white dark:bg-slate-800/50 rounded-2xl p-6 border border-slate-200 dark:border-slate-700/50 shadow-lg">
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+        <div className="bg-white dark:bg-slate-800/50 rounded-xl p-3.5 border border-slate-200 dark:border-slate-700/50 shadow-lg">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-xs font-medium text-slate-600 dark:text-slate-400">
               Total Coins
             </p>
-            <Coins className="h-5 w-5 text-yellow-500" />
+            <Coins className="h-4 w-4 text-yellow-500" />
           </div>
-          <p className="text-3xl font-bold text-slate-900 dark:text-white">
+          <p className="text-xl font-bold text-slate-900 dark:text-white">
             {coinBalance.totalCoins}
           </p>
         </div>
 
         {/* Available Coins */}
-        <div className="bg-white dark:bg-slate-800/50 rounded-2xl p-6 border border-slate-200 dark:border-slate-700/50 shadow-lg">
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+        <div className="bg-white dark:bg-slate-800/50 rounded-xl p-3.5 border border-slate-200 dark:border-slate-700/50 shadow-lg">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-xs font-medium text-slate-600 dark:text-slate-400">
               Available
             </p>
-            <TrendingUp className="h-5 w-5 text-green-500" />
+            <TrendingUp className="h-4 w-4 text-green-500" />
           </div>
-          <p className="text-3xl font-bold text-green-600 dark:text-green-400">
+          <p className="text-xl font-bold text-green-600 dark:text-green-400">
             {coinBalance.availableCoins}
           </p>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
+          <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
             ₹{coinBalance.availableCoins}
           </p>
         </div>
 
         {/* Used Coins */}
-        <div className="bg-white dark:bg-slate-800/50 rounded-2xl p-6 border border-slate-200 dark:border-slate-700/50 shadow-lg">
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+        <div className="bg-white dark:bg-slate-800/50 rounded-xl p-3.5 border border-slate-200 dark:border-slate-700/50 shadow-lg">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-xs font-medium text-slate-600 dark:text-slate-400">
               Used
             </p>
-            <TrendingDown className="h-5 w-5 text-orange-500" />
+            <TrendingDown className="h-4 w-4 text-orange-500" />
           </div>
-          <p className="text-3xl font-bold text-orange-600 dark:text-orange-400">
+          <p className="text-xl font-bold text-orange-600 dark:text-orange-400">
             {coinBalance.usedCoins}
           </p>
         </div>
 
         {/* Rupee Value */}
-        <div className="bg-gradient-to-br from-blue/5 to-blue/10 dark:from-blue/20 dark:to-blue/10 rounded-2xl p-6 border border-blue/20 dark:border-blue/30">
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+        <div className="bg-gradient-to-br from-blue/5 to-blue/10 dark:from-blue/20 dark:to-blue/10 rounded-xl p-3.5 border border-blue/20 dark:border-blue/30">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-xs font-medium text-slate-600 dark:text-slate-400">
               Value
             </p>
-            <span className="text-lg font-bold text-blue">₹</span>
+            <span className="text-sm font-bold text-blue">₹</span>
           </div>
-          <p className="text-3xl font-bold text-blue dark:text-blue-400">
+          <p className="text-xl font-bold text-blue dark:text-blue-400">
             ₹{statistics.coinsValue}
           </p>
         </div>

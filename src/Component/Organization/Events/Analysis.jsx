@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import demo from "../../image/demo.jpg"
 
-const baseurl = process.env.REACT_APP_BASE_URL;
+const baseurl = import.meta.env.VITE_BASE_URL;
 function Analysis() {
   const token = localStorage.getItem("token");
   const [data, setData] = useState();
@@ -75,7 +75,7 @@ function Analysis() {
             </div>
           </div>
           {/* Total Photos  */}
-          <div className="flex items-center justify-between pt-2">
+          <div className="flex items-center justify-between pt-2 pb-4">
             <span className="text-slate-700 dark:text-white font-semibold">
               Total Photos
             </span>

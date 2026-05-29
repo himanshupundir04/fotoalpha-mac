@@ -18,7 +18,7 @@ import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { toast } from "react-toastify";
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 function Publicview() {
   const [profilePreview, setProfilePreview] = useState(null);
@@ -576,9 +576,9 @@ function Publicview() {
       <div className="min-h-screen bg-gray-50">
         <section className="relative">
           {/* Cover Image */}
-          <div className="relative w-full bg-gray-300 rounded overflow-hidden">
+          <div className="relative w-full bg-black rounded overflow-hidden">
             <div
-              className="absolute bg-white top-5 right-5 p-1 px-2 md:px-4 rounded-lg cursor-pointer dark:bg-slate-800"
+              className="absolute bg-white top-5 right-5 p-1 px-2 md:px-4 rounded-lg cursor-pointer dark:bg-slate-800 z-10"
               onClick={() => navigate("/photographer/manage_portfolio")}
             >
               <p className="flex gap-1 text-xs md:text-sm items-center font-normal text-slate-700 dark:text-white">
@@ -588,7 +588,7 @@ function Publicview() {
             <img
               src={coverPreview || cover}
               alt="cover"
-              className="w-full h-[80vh] md:h-full object-cover bg-slate-100 hidden md:block"
+              className="w-full aspect-[4/1] object-cover hidden md:block"
               loading="lazy"
             />
             <img
@@ -610,15 +610,15 @@ function Publicview() {
           </div>
 
           {/* new layout */}
-          <div className="w-full p-6 md:p-12 bg-white text-slate-900 font-serif">
+          <div className="w-full p-5 md:p-10 bg-white text-slate-900 font-serif">
             {/* Main Layout: Desktop 2 Columns */}
-            <div className="flex flex-col lg:flex-row gap-12">
+            <div className="flex flex-col lg:flex-row gap-10">
               {/* Left Section: Featured Albums */}
               <div className="flex-1">
                 {folders.length !== 0 && (
                   <>
-                    <div className="flex justify-between items-end border-b border-slate-100 pb-4 mb-8">
-                      <h2 className="text-3xl italic text-[#1A1C1C]">
+                    <div className="flex justify-between items-end border-b border-slate-100 pb-3 mb-6">
+                      <h2 className="text-2xl italic text-[#1A1C1C]">
                         Featured Albums
                       </h2>
                       { }
@@ -661,7 +661,7 @@ function Publicview() {
                                             ${isSelected ? "scale-105 border-2 border-teal-600" : "hover:scale-105"}
                                           `}
                                 // Applying fixed width and height here
-                                style={{ height: "100px" }}
+                                style={{ height: "80px" }}
                               >
                                 <img
                                   src={images[currentIndex]?.signedUrl || demo}
@@ -669,7 +669,7 @@ function Publicview() {
                                   className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                 />
                               </div>
-                              <h3 className="text-xl font-medium capitalize">
+                              <h3 className="text-base font-medium capitalize">
                                 {folder?.name}
                               </h3>
                             </div>
@@ -711,7 +711,7 @@ function Publicview() {
                               return (
                                 <div
                                   key={folder._id}
-                                  className="group cursor-pointer w-1/2 h-[450px] flex-shrink-0"
+                                  className="group cursor-pointer w-1/2 h-[360px] flex-shrink-0"
                                   // Setting the outer container to the fixed width ensures the title also stays within bounds
 
                                   onClick={() => {
@@ -733,7 +733,7 @@ function Publicview() {
                                 `}
                             > */}
                                   <div
-                                    className={`relative rounded-xl w-full h-[400px] aspect-square overflow-hidden bg-slate-100 transition-all duration-300 
+                                    className={`relative rounded-xl w-full h-[320px] aspect-square overflow-hidden bg-slate-100 transition-all duration-300
                                   hover:scale-105}
                                 `}
                                   >
@@ -745,7 +745,7 @@ function Publicview() {
                                       className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                     />
                                   </div>
-                                  <h3 className="text-xl mt-2 font-medium capitalize">
+                                  <h3 className="text-base mt-1 font-medium capitalize">
                                     {folder?.name}
                                   </h3>
                                 </div>
@@ -762,14 +762,14 @@ function Publicview() {
                   </>
                 )}
 
-                <div className="flex flex-col lg:flex-row gap-12 md:mt-12 mt-8">
+                <div className="flex flex-col lg:flex-row gap-10 md:mt-10 mt-6">
                   {/* Left Column: Gallery Selection */}
                   <div className="flex-1">
                     {/* Header & Filter */}
                     {photos.length !== 0 || folders.length !== 0 ? (
                       <>
-                        <div className="flex gap-4 sm:flex-row sm:items-baseline justify-between border-b border-slate-100 pb-4 mb-8">
-                          <h2 className="text-3xl italic text-[#1A1C1C] mt-4">
+                        <div className="flex gap-4 sm:flex-row sm:items-baseline justify-between border-b border-slate-100 pb-3 mb-6">
+                          <h2 className="text-2xl italic text-[#1A1C1C] mt-3">
                             Gallery
                           </h2>
                           <div className="flex overflow-auto gap-6 mt-4 sm:mt-0 text-[10px] uppercase tracking-widest font-sans font-bold">
@@ -805,7 +805,7 @@ function Publicview() {
 
                         <div className="flex flex-col items-center gap-8">
                           {dataToShow.length !== 0 && (
-                            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+                            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 w-full">
                               {dataToShow &&
                                 dataToShow
                                   .slice(0, visibleCount)
@@ -854,11 +854,11 @@ function Publicview() {
 
                           {/* Load More Button */}
                           {dataToShow.length > visibleCount && (
-                            <div className="mt-12 flex justify-center">
+                            <div className="mt-8 flex justify-center">
                               <button
                                 onClick={handleLoadMore}
-                                className="px-12 py-4 border border-slate-300 
-      text-sm uppercase tracking-[0.2em] hover:bg-black 
+                                className="px-10 py-3 border border-slate-300
+      text-sm uppercase tracking-[0.2em] hover:bg-black
       hover:text-white"
                               >
                                 Load More Works
@@ -868,9 +868,9 @@ function Publicview() {
                         </div>
                       </>
                     ) : (
-                      <div className="flex flex-col items-center justify-center py-16 text-center">
+                      <div className="flex flex-col items-center justify-center py-12 text-center">
                         {/* Icon */}
-                        <div className="w-16 h-16 flex items-center justify-center rounded-full bg-slate-100 text-slate-400 mb-4">
+                        <div className="w-12 h-12 flex items-center justify-center rounded-full bg-slate-100 text-slate-400 mb-3">
                           📷
                         </div>
 
@@ -896,20 +896,20 @@ function Publicview() {
               </div>
 
               {/* Right Section: Sidebar Profile */}
-              <aside className="lg:w-80 space-y-8" id="contact-section">
+              <aside className="lg:w-64 space-y-6" id="contact-section">
                 {/* Profile Header */}
                 <div className="flex flex-col items-start">
-                  <div className="w-24 h-24 bg-black mb-6">
+                  <div className="w-20 h-20 bg-black mb-5">
                     <img
                       src={profilePreview || profile}
                       alt="Profile"
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <h1 className="text-4xl font-light mb-2">
+                  <h1 className="text-3xl font-light mb-1">
                     {portfolio?.brandName ? portfolio.brandName : "No name"}
                   </h1>
-                  <p className="text-xs tracking-widest text-teal-600 font-bold uppercase mb-4">
+                  <p className="text-xs tracking-widest text-teal-600 font-bold uppercase mb-3">
                     {portfolio?.tagline ? portfolio?.tagline : "No tag line"}
                   </p>
                   <div className="space-y-2 text-start">
@@ -940,7 +940,7 @@ function Publicview() {
                     )}
                   </div>
 
-                  <div className="flex items-center mt-6 text-sm font-sans font-semibold tracking-wide">
+                  <div className="flex items-center mt-4 text-sm font-sans font-semibold tracking-wide">
                     <span className="mr-2">
                       {" "}
                       <LocationPinIcon fontSize="small" />{" "}
@@ -952,12 +952,12 @@ function Publicview() {
                 </div>
 
                 {/* Investment Card */}
-                <div className="bg-[#F3F3F3] p-8 border-2 text-start">
-                  <p className="text-[10px] tracking-widest text-slate-400 uppercase mb-4">
+                <div className="bg-[#F3F3F3] p-6 border-2 text-start">
+                  <p className="text-[10px] tracking-widest text-slate-400 uppercase mb-3">
                     Investment
                   </p>
-                  <div className="flex items-baseline mb-6">
-                    <span className="text-3xl font-semibold">
+                  <div className="flex items-baseline mb-5">
+                    <span className="text-2xl font-semibold">
                       ₹{" "}
                       {portfolio?.pricing
                         ? portfolio?.pricing?.toLocaleString("en-IN")
@@ -967,12 +967,12 @@ function Publicview() {
                       / DAILY RATE
                     </span>
                   </div>
-                  <p className="text-xs leading-relaxed text-slate-500 font-sans mb-8">
+                  <p className="text-xs leading-relaxed text-slate-500 font-sans mb-6">
                     Full-day coverage including post-production, digital
                     delivery, and licensing for editorial use.
                   </p>
                   {portfolio.contactPhone && (
-                    <button className="w-full bg-[#C80F0F] text-white py-4 px-6 text-xs tracking-widest uppercase hover:bg-black transition-colors">
+                    <button className="w-full bg-[#C80F0F] text-white py-3 px-5 text-xs tracking-widest uppercase hover:bg-black transition-colors">
                       <a
                         href={`https://wa.me/${portfolio?.contactPhone}`}
                         target="_blank"
@@ -985,15 +985,15 @@ function Publicview() {
                 </div>
 
                 {/* Right Column: Connect & Quote */}
-                <aside className="lg:w-80 space-y-12">
+                <aside className="lg:w-64 space-y-8">
                   {/* Connect Links */}
                   <div>
                     {profile.contactPhone && (
-                      <h3 className="text-[10px] tracking-widest uppercase text-slate-400 mb-6 font-sans font-bold">
+                      <h3 className="text-[10px] tracking-widest uppercase text-slate-400 mb-4 font-sans font-bold">
                         Connect
                       </h3>
                     )}
-                    <ul className="space-y-4">
+                    <ul className="space-y-3">
                       <li>
                         {portfolio?.contactPhone && (
                           <a
@@ -1106,12 +1106,12 @@ function Publicview() {
                   </div>
 
                   {/* Black Quote Card */}
-                  <div className="bg-[#1A1C1C] p-6 text-center flex flex-col items-center justify-center min-h-[150px]">
-                    <div className="text-white mb-2">
+                  <div className="bg-[#1A1C1C] p-5 text-center flex flex-col items-center justify-center min-h-[120px]">
+                    <div className="text-white mb-1">
                       {/* Decorative Stars Icon */}
                       <svg
-                        width="28"
-                        height="28"
+                        width="22"
+                        height="22"
                         viewBox="0 0 28 28"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
@@ -1122,7 +1122,7 @@ function Publicview() {
                         />
                       </svg>
                     </div>
-                    <p className="text-white italic text-lg leading-relaxed">
+                    <p className="text-white italic text-base leading-relaxed">
                       "Capturing the moments that vanish into the silence."
                     </p>
                   </div>

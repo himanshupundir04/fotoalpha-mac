@@ -4,6 +4,7 @@ import format from "date-fns/format";
 import parse from "date-fns/parse";
 import startOfWeek from "date-fns/startOfWeek";
 import getDay from "date-fns/getDay";
+import { enUS } from "date-fns/locale";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { CircularProgress, Dialog, DialogContent } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -12,9 +13,8 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import BoltIcon from "@mui/icons-material/Bolt";
 import { useNavigate } from "react-router-dom";
 
-// Locale setup
 const locales = {
-  "en-US": require("date-fns/locale/en-US"),
+  "en-US": enUS,
 };
 
 const localizer = dateFnsLocalizer({
@@ -25,7 +25,7 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 export default function PublicCalendar() {
   const navigate = useNavigate();
@@ -80,10 +80,10 @@ export default function PublicCalendar() {
       // console.log(response.data)
       setLoading(false)
       setEvents(fetchedEvents);
-       window.electronAPI.setStore("calendar", fetchedEvents);
+       window.electronAPI?.setStore("calendar", fetchedEvents);
     } catch (error) {
       setLoading(false)
-       const cachedSummary = await window.electronAPI.getStore("calendar");
+       const cachedSummary = await window.electronAPI?.getStore("calendar");
       if (cachedSummary) {
         setEvents(cachedSummary);
         // console.log(cachedSummary);

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ShoppingCart, Zap, HardDrive, Calendar, Users, Package } from "lucide-react";
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 const CoinPurchaseModal = ({ fetchCoinData }) => {
   const [features, setFeatures] = useState({});
@@ -139,7 +139,7 @@ const CoinPurchaseModal = ({ fetchCoinData }) => {
           onClick={() => setActiveTab("purchase")}
           className={`pb-2 px-3 text-sm font-medium transition ${
             activeTab === "purchase"
-              ? "text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400"
+              ? "text-blue dark:text-blue-400 border-b-2 border-blue dark:border-blue-400"
               : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-300"
           }`}
         >
@@ -149,7 +149,7 @@ const CoinPurchaseModal = ({ fetchCoinData }) => {
           onClick={() => setActiveTab("history")}
           className={`pb-2 px-3 text-sm font-medium transition ${
             activeTab === "history"
-              ? "text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400"
+              ? "text-blue dark:text-blue-400 border-b-2 border-blue dark:border-blue-400"
               : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-300"
           }`}
         >
@@ -175,7 +175,7 @@ const CoinPurchaseModal = ({ fetchCoinData }) => {
                   }}
                   className={`p-2 rounded-lg border transition flex items-center gap-1.5 text-xs ${
                     selectedFeature === featureType
-                      ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                      ? "border-blue bg-blue-50 dark:bg-blue-900/20"
                       : "border-slate-200 dark:border-slate-700 hover:border-blue-300"
                   }`}
                 >
@@ -202,8 +202,8 @@ const CoinPurchaseModal = ({ fetchCoinData }) => {
                     className={`w-full p-2.5 rounded-lg border transition text-left text-xs ${
                       selectedOption?.coins === parseInt(coinAmount) ||
                       selectedOption?.coins === option.coins
-                        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                        : "border-slate-200 dark:border-slate-700 hover:border-blue-300"
+                        ? "border-blue bg-blue-50 dark:bg-blue-900/20"
+                        : "border-slate-200 dark:border-slate-700 hover:border-blue"
                     }`}
                   >
                     <div className="flex justify-between items-center">

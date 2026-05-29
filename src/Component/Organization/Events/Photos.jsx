@@ -7,7 +7,7 @@ import axios from "axios";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import AddSubEvent from "./AddSubEvent";
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 function Photos() {
   const { portfolioevent } = useContext(PortfolioEventContext);
@@ -35,13 +35,13 @@ function Photos() {
       );
       // console.log("sub", response.data?.event?.timeSlots);
       setSlots(response?.data?.event?.timeSlots);
-      window.electronAPI.setStore(
+      window.electronAPI?.setStore(
         "categoryslot",
         response?.data?.event?.timeSlots
       );
     } catch (error) {
       console.log(error);
-      const cachedSummary = window.electronAPI.getStore("categoryslot");
+      const cachedSummary = window.electronAPI?.getStore("categoryslot");
       setSlots(cachedSummary);
     }
   };
@@ -57,7 +57,7 @@ function Photos() {
                   key={index}
                             className="group overflow-hidden relative rounded-xl bg-white dark:bg-slate-800 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer "
                   onClick={() =>
-                    navigate(`subevent/${cat.eventSubCategory.id}/sync_photos`)
+                    navigate(`/organization/event/${eventid}/subevent/${cat.eventSubCategory.id}/photos`)
                   }
                 >
                   <div className="overflow-hidden relative rounded-t-xl h-40">

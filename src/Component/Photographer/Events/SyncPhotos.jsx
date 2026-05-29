@@ -16,7 +16,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SyncVideos from "./SyncVideos";
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 function SyncPhotos() {
   const { updateUploadState, setEventsid, setSubeventsid, setStatus, status } =
@@ -170,7 +170,7 @@ function SyncPhotos() {
   };
 
   const handleSelectFolder = async () => {
-    const selected = await window.electronAPI.selectFolder();
+    const selected = await window.electronAPI?.selectFolder();
     if (!selected) return;
     setFolderPath(selected);
 

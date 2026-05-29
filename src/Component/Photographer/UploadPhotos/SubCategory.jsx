@@ -4,7 +4,7 @@ import Select from "react-select";
 import { PortfolioContext } from "../Context/PortfolioContext";
 import { UploadVideoContext } from "../Context/UploadVideoContext";
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 function SubCategory() {
   const [event, setEvent] = useState([]);
@@ -25,12 +25,12 @@ function SubCategory() {
         },
       });
       setEvent(response.data.event.timeSlots);
-      window.electronAPI.setStore(
+      window.electronAPI?.setStore(
         "uplaodSubCate",
         response.data.event.timeSlots
       );
     } catch (error) {
-      const cachedSummary = await window.electronAPI.getStore("uplaodSubCate");
+      const cachedSummary = await window.electronAPI?.getStore("uplaodSubCate");
       if (cachedSummary) {
         setEvent(cachedSummary);
       }

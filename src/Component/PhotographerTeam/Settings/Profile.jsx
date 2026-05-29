@@ -6,7 +6,7 @@ import profilepic from "../../image/profile-avatar.jpg";
 import PhoneInput from "react-phone-input-2";
 import * as Yup from "yup";
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const baseURL = import.meta.env.VITE_BASE_URL;
 const nameRegex = /^[A-Za-z\s]+$/;
 
 const validationSchema = Yup.object({
@@ -47,9 +47,9 @@ function Profile() {
       });
       setProfile(response.data);
       localStorage.setItem("avatar", response?.data?.avatarUrl);
-      window.electronAPI.setStore("profile", response.data);
+      window.electronAPI?.setStore("profile", response.data);
     } catch (error) {
-      const cachedSummary = await window.electronAPI.getStore("profile");
+      const cachedSummary = await window.electronAPI?.getStore("profile");
       if (cachedSummary) {
         setProfile(cachedSummary);
       }

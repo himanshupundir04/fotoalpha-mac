@@ -20,8 +20,8 @@ import { PortfolioEventContext } from "../Context/PortfolioEventContext";
 import PeopleIcon from "@mui/icons-material/People";
 import axios from "axios";
 
-const baseurl = process.env.REACT_APP_BASE_URL;
-const baseurlFront = process.env.REACT_APP_FRONT_BASE_URL;
+const baseurl = import.meta.env.VITE_BASE_URL;
+const baseurlFront = import.meta.env.VITE_FRONT_BASE_URL;
 const style = {
   position: "absolute",
   top: "50%",
@@ -353,26 +353,33 @@ function Oveview() {
               <h2 className="text-slate-700 text-xl font-normal dark:text-white mb-3">
                 Event Sharing
               </h2>
-              <div
-                style={{
-                  height: "auto",
-                  margin: "0 auto",
-                  maxWidth: 180,
-                  width: "100%",
-                }}
-              >
-                <QRCode
-                  size={250}
+              {portfolioevent?.eventCode ? (
+                <div
                   style={{
                     height: "auto",
-                    maxWidth: "100%",
+                    margin: "0 auto",
+                    maxWidth: 200,
                     width: "100%",
                   }}
-                  value={`${baseurlFront}/guest/register?eventcode=${portfolioevent?.eventCode}`}
-                  viewBox={`0 0 256 256`}
-                  ref={qrCodeRef}
-                />
-              </div>
+                >
+                  <QRCode
+                    size={250}
+                    style={{
+                      height: "auto",
+                      maxWidth: "100%",
+                      width: "100%",
+                    }}
+                    value={`${baseurlFront}/guest/register?eventcode=${portfolioevent.eventCode}`}
+                    viewBox={`0 0 256 256`}
+                    ref={qrCodeRef}
+                  />
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-4 text-slate-400 text-sm">
+                  <p>QR code unavailable</p>
+                  <p className="text-xs mt-1">Event code not set</p>
+                </div>
+              )}
               <div className="flex justify-center mt-5">
                 <button
                   className="btn border border-blue rounded p-2 text-sm text-blue font-normal hover:bg-blueHover hover:text-white font-normal"
@@ -401,26 +408,33 @@ function Oveview() {
                       FOTOALPHA
                     </h2>
                   </div>
-                  <div
-                    style={{
-                      height: "auto",
-                      margin: "0 auto",
-                      maxWidth: 180,
-                      width: "100%",
-                    }}
-                  >
-                    <QRCode
-                      size={250}
+                  {portfolioevent?.eventCode ? (
+                    <div
                       style={{
                         height: "auto",
-                        maxWidth: "100%",
+                        margin: "0 auto",
+                        maxWidth: 220,
                         width: "100%",
                       }}
-                      value={`${baseurlFront}/guest/register?eventcode=${portfolioevent?.eventCode}`}
-                      viewBox={`0 0 256 256`}
-                      ref={qrCodeRef}
-                    />
-                  </div>
+                    >
+                      <QRCode
+                        size={250}
+                        style={{
+                          height: "auto",
+                          maxWidth: "100%",
+                          width: "100%",
+                        }}
+                        value={`${baseurlFront}/guest/register?eventcode=${portfolioevent.eventCode}`}
+                        viewBox={`0 0 256 256`}
+                        ref={qrCodeRef}
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-6 text-slate-400 text-sm">
+                      <p>QR code unavailable</p>
+                      <p className="text-xs mt-1">Event code not set</p>
+                    </div>
+                  )}
                   <p className="text-slate-700 font-normal text-center mt-2 dark:text-white">
                     Scan to view the album
                   </p>
@@ -442,7 +456,7 @@ function Oveview() {
                     <>
                       <div className="flex justify-center">
                         <p className="text-slate-700 font-normal mt-3 dark:text-white">
-                          Event Code: {portfolioevent?.eventCode}
+                          Event Code: {portfolioevent?.eventCode || <span className="text-slate-400 italic">Not available</span>}
                         </p>
                       </div>
                       <div className="flex justify-center gap-4 mt-3">

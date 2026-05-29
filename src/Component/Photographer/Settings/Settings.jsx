@@ -10,7 +10,7 @@ import { CircularProgress } from "@mui/material";
 import UsageStatistics from "./UsageStatistics";
 import PhotographerVerification from "./PhotographerVerification";
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 function Settings() {
     const tab = localStorage.getItem("tab");
@@ -53,10 +53,10 @@ function Settings() {
       setProfile(response?.data);
       localStorage.setItem("avatar",response?.data?.avatarUrl)
       // console.log(response.data);
-      window.electronAPI.setStore("setting", response?.data);
+      window.electronAPI?.setStore("setting", response?.data);
     } catch (error) {
       setLoading(false);
-      const cachedSummary = await window.electronAPI.getStore("settings");
+      const cachedSummary = await window.electronAPI?.getStore("settings");
       if (cachedSummary) {
         setProfile(cachedSummary);
         // console.log(cachedSummary);

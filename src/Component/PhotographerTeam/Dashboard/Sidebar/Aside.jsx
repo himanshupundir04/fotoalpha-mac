@@ -47,13 +47,12 @@ function Aside({ setIsOpen, isOpen }) {
             <Link
               to="events"
               className={`flex items-center space-x-2 p-2 mb-1 rounded font-semibold no-underline ${
-                isActive("events")
+                isActive("events" || "event")
                   ? "bg-blue text-white"
                   : "text-slate-700 dark:!text-white hover:bg-slate-300 dark:hover:bg-gray-700"
               }`}
               onClick={() => {
                 if (window.innerWidth < 768) {
-                  // ✅ only close on mobile (Tailwind md breakpoint)
                   setIsOpen(false);
                 }
               }}

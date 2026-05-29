@@ -20,7 +20,7 @@ import { startUpload } from "../Context/UploadHelper";
 import SyncVideos from "./SyncVideos";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const baseURL = import.meta.env.VITE_BASE_URL;
 
 function SyncPhotos() {
   const navigate = useNavigate();
@@ -215,7 +215,7 @@ function SyncPhotos() {
   // UPLOAD
   // -------------------------
   const handleSelectFolder = async () => {
-    const selected = await window.electronAPI.selectFolder();
+    const selected = await window.electronAPI?.selectFolder();
     if (!selected) return;
     setFolderPath(selected);
 

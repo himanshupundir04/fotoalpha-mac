@@ -6,6 +6,7 @@ import PayRozeer from "./PayRozeer";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { PRIMARY } from "../../../../../theme/colors";
 
 const style = {
   position: "absolute",
@@ -31,7 +32,7 @@ const style = {
   },
 };
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const baseURL = import.meta.env.VITE_BASE_URL;
 function PaymentDetails({ payopen, payclose, discountamnt }) {
   const token = localStorage.getItem("token");
   const { plan, year, planid, setPlan,type, setType } = useContext(PlanContext);
@@ -141,7 +142,7 @@ function PaymentDetails({ payopen, payclose, discountamnt }) {
         },
         prefill: options.prefill || {},
         theme: {
-          color: "#04BADE",
+          color: PRIMARY,
         },
       });
 

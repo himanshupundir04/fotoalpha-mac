@@ -1,113 +1,67 @@
-import React, { useState } from "react";
-import Swal from "sweetalert2";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
-import axios from "axios";
 import { Box, Modal } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
+import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
 import LoginForm from "../../../login/LoginForm";
 
-const baseURL = process.env.REACT_APP_BASE_URL;
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: {
-    xs: "90%",
-    md: 500,
-  },
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  border: "1px solid #fff",
-  py: 2,
-  px: {
-    xs: 2,
-    md: 4,
-  },
-};
 function LoginModel({ open, handleClose, opensignup }) {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-    },
-    onSubmit: async (values) => {
-      setLoading(true);
-      try {
-        const res = await axios.post(`${baseURL}/auth/login`, values);
-        setLoading(false);
-
-        Swal.fire({
-          position: "top-end",
-          title: "Login Successful",
-          showConfirmButton: false,
-          timer: 1000,
-        });
-
-        formik.resetForm();
-        localStorage.setItem("token", res.data.data.token);
-        localStorage.setItem("refreshToken", res.data.data.refreshToken);
-        localStorage.setItem("user", JSON.stringify(res.data.data.user));
-        // localStorage.setItem("user", JSON.stringify({ id: res.data.data.user._id , role: res.data.data.user.role }));
-
-        const role = res.data.data.user.role.name;
-        // console.log(res.data.data.user.role.name);
-
-        if (role === "photographer") {
-          navigate("/photographer/dashboard");
-        } else if (role === "guest") {
-          navigate("/guest/my_events");
-        } else if (role === "superadmin") {
-          navigate("/superadmin/dashboard");
-        } else {
-          navigate("/superadmin/dashboard");
-        }
-      } catch (error) {
-        // console.log(error?.response?.data?.message);
-        setLoading(false);
-        Swal.fire({
-          position: "top-end",
-          title: "Login Failed",
-          text: error?.response?.data?.message || "Something went wrong!",
-          icon: "error",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
-    },
-  });
 
   const handlesignup = () => {
     handleClose();
-   navigate("/register")
+    navigate("/register");
   };
 
   return (
-    <>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <div className="flex justify-end">
-            <CloseIcon onClick={handleClose} className="cursor-pointer " />
+    <Modal open={open} onClose={handleClose}>
+      <Box sx={{
+        position: "absolute", top: "50%", left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: { xs: "92%", sm: 420 },
+        outline: "none",
+      }}>
+        <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl overflow-hidden">
+
+          {/* Header */}
+          <div className="relative bg-gradient-to-r from-[#0b8599] to-[#0a7085] px-6 pt-6 pb-10">
+            <button
+              onClick={handleClose}
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
+            >
+              <CloseIcon sx={{ fontSize: 16, color: "#fff" }} />
+            </button>
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center">
+                <LoginOutlinedIcon sx={{ fontSize: 22, color: "#fff" }} />
+              </div>
+              <div>
+                <h2 className="text-white font-bold text-lg leading-tight">Welcome Back</h2>
+                <p className="text-white/70 text-xs mt-0.5">Sign in to your FotoAlpha account</p>
+              </div>
+            </div>
           </div>
-          <LoginForm handleClose={handleClose}/>
-          <p
-            className="mt-3 text-gray-500 font-semibold text-center cursor-pointer"
-            onClick={handlesignup}
-          >
-            Craete New Account
-          </p>
-        </Box>
-      </Modal>
-    </>
+
+          {/* Form body */}
+          <div className="px-6 pb-2 -mt-5">
+            <LoginForm handleClose={handleClose} />
+          </div>
+
+          {/* Footer */}
+          <div className="px-6 pb-6 flex items-center justify-center gap-2 mt-1">
+            <span className="text-xs text-slate-400">Don't have an account?</span>
+            <button
+              onClick={handlesignup}
+              className="flex items-center gap-1 text-xs font-bold text-[#0b8599] hover:text-[#086a7a] transition-colors"
+            >
+              <PersonAddOutlinedIcon sx={{ fontSize: 13 }} />
+              Create New Account
+            </button>
+          </div>
+        </div>
+      </Box>
+    </Modal>
   );
 }
 

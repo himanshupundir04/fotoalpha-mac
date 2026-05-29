@@ -13,7 +13,10 @@ import { startUpload } from "../Context/UploadHelper";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
 
-const baseURL = process.env.REACT_APP_BASE_URL;
+const baseURL = import.meta.env.VITE_BASE_URL;
+
+const isVideo = (url) =>
+  /\.(mp4|webm|ogg|mov|avi|mkv)$/i.test((url || "").split("?")[0]);
 
 function SyncPhotos() {
   const navigate = useNavigate();
@@ -92,7 +95,15 @@ function SyncPhotos() {
       setTableData(
         serializablePhotos.map((item, index) => ({
           ...item,
-          preview: (
+          preview: isVideo(item.url) ? (
+            <div
+              className="relative w-16 h-16 cursor-pointer"
+              onClick={() => { setZoomImg(item.url); setZoomIndex(index); }}
+            >
+              <video src={item.url} className="w-full h-full object-cover rounded" />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40 text-white text-xs rounded">▶</div>
+            </div>
+          ) : (
             <img
               src={item.url}
               alt={item.file}
@@ -105,9 +116,9 @@ function SyncPhotos() {
           ),
         }))
       );
-      window.electronAPI.setStore("syncphotos", serializablePhotos);
+      window.electronAPI?.setStore("syncphotos", serializablePhotos);
     } catch (error) {
-      const cachedSummary = await window.electronAPI.getStore("syncphotos");
+      const cachedSummary = await window.electronAPI?.getStore("syncphotos");
       if (cachedSummary) {
         setTableData(cachedSummary);
         // console.log(cachedSummary);
@@ -116,7 +127,7 @@ function SyncPhotos() {
   };
 
   const handleSelectFolder = async () => {
-    const selected = await window.electronAPI.selectFolder();
+    const selected = await window.electronAPI?.selectFolder();
     if (!selected) return;
     setFolderPath(selected);
 
@@ -322,11 +333,20 @@ function SyncPhotos() {
 
       <Dialog open={zoomImg} onClose={() => setZoomImg(null)} maxWidth="md">
         <div className="relative">
-          <img
-            src={zoomImg}
-            alt="zoom"
-            className="h-[80vh] w-[80vw] object-contain p-3"
-          />
+          {isVideo(zoomImg) ? (
+            <video
+              src={zoomImg}
+              controls
+              autoPlay
+              className="h-[80vh] w-[80vw] object-contain p-3"
+            />
+          ) : (
+            <img
+              src={zoomImg}
+              alt="zoom"
+              className="h-[80vh] w-[80vw] object-contain p-3"
+            />
+          )}
           <button
             onClick={() => setZoomImg(null)}
             className="absolute top-2 right-2 bg-white px-2 py-1 rounded"
